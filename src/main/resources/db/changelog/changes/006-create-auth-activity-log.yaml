@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: auth-service
+      changes:
+        - createTable:
+            tableName: auth_activity_log
+            columns:
+              - column:
+                  name: activity_id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: auth_user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: action
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity_time
+                  type: timestamp
+                  defaultValueComputed: current_timestamp
+              - column:
+                  name: ip_address
+                  type: varchar(45)
+              - column:
+                  name: user_agent
+                  type: text
+              - column:
+                  name: status
+                  type: varchar(20)
+              - column:
+                  name: details
+                  type: text
+        - addForeignKeyConstraint:
+            baseTableName: auth_activity_log
+            baseColumnNames: auth_user_id
+            referencedTableName: users
+            referencedColumnNames: auth_user_id

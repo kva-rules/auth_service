@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: auth-service
+      changes:
+        - createTable:
+            tableName: login_history
+            columns:
+              - column:
+                  name: login_id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: auth_user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: login_time
+                  type: timestamp
+                  defaultValueComputed: current_timestamp
+              - column:
+                  name: ip_address
+                  type: varchar(45)
+              - column:
+                  name: device_info
+                  type: text
+              - column:
+                  name: status
+                  type: varchar(20)
+                  defaultValue: "SUCCESS"
+        - addForeignKeyConstraint:
+            baseTableName: login_history
+            baseColumnNames: auth_user_id
+            referencedTableName: users
+            referencedColumnNames: auth_user_id
