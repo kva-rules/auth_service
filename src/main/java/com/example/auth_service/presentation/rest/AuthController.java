@@ -54,7 +54,7 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success("Token refreshed successfully", response));
     }
 
-    @PostMapping("/validate")
+    @GetMapping("/validate")
     public ResponseEntity<TokenValidationResponse> validateToken(
             @RequestHeader("Authorization") String authHeader) {
         log.debug("Token validation request");
