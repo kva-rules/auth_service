@@ -48,7 +48,7 @@ public class User implements UserDetails {
 
     private LocalDateTime lastLoginAt;
 
-@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<UserRole> userRoles;
 
     @CreatedDate

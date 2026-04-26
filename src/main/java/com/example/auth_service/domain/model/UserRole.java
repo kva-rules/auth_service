@@ -27,7 +27,7 @@ public class UserRole {
     @JoinColumn(name = "auth_user_id", insertable = false, updatable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", insertable = false, updatable = false)
     private Role role;
 }

@@ -5,7 +5,7 @@ spring:
   application:
     name: auth-service
   datasource:
-    url: jdbc:postgresql://postgres-auth:5432/auth_db
+    url: jdbc:postgresql://localhost:5432/auth_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -20,7 +20,7 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: false
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: auth-service-group
       auto-offset-reset: earliest
@@ -34,8 +34,16 @@ spring:
 
 jwt:
   secret: myVerySecretKeyForJWTThatIsLongEnoughForHS512Signature
-  expiration: 3600000 # 1 hour in ms
-  refresh-expiration: 86400000 # 24 hours in ms
+  expiration: 3600000
+  refresh-expiration: 86400000
+
+kafka:
+  bootstrap-servers: localhost:9092
+  topic:
+    user-events: user-registration
+
+auth:
+  max-failed-attempts: 5
 
 logging:
   level:
@@ -43,13 +51,3 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.kafka: INFO
     liquibase: INFO
-
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    operations-sorter: method
-    tags-sorter: alpha
-    try-it-out-enabled: true
-    display-request-duration: true

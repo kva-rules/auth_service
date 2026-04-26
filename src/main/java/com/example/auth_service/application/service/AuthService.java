@@ -187,11 +187,16 @@ public class AuthService {
 
         try {
             Long userId = tokenService.extractUserId(token);
+            // The downstream services key on UUID, not the legacy Long. We surface BOTH so
+            // the gateway can pick whichever matches the downstream service's expectation —
+            // in practice the AuthFilter reads authUserId for X-User-Id.
+            UUID authUserId = tokenService.extractAuthUserId(token);
             List<String> roles = tokenService.extractRoles(token);
-            
+
             return TokenValidationResponse.builder()
                     .valid(true)
                     .userId(userId)
+                    .authUserId(authUserId)
                     .roles(roles)
                     .build();
         } catch (Exception e) {
