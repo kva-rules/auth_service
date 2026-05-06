@@ -18,9 +18,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Tag(name = "User Admin", description = "Admin operations on auth-service user accounts (distinct from User Service profiles)")
 @RestController
-@RequestMapping("/users/{userId}")
+@RequestMapping("/api/auth/users/{userId}")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
@@ -38,7 +40,7 @@ public class UserController {
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/lock")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<Void>> lockAccount(@Parameter(description = "Numeric auth-service user id") @PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<Void>> lockAccount(@Parameter(description = "Auth user UUID") @PathVariable UUID userId) {
         log.info("Lock account request for userId: {}", userId);
         authService.lockAccount(userId);
         return ResponseEntity.ok(ApiResponse.success("Account locked successfully", null));
@@ -55,7 +57,7 @@ public class UserController {
     @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/unlock")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<Void>> unlockAccount(@Parameter(description = "Numeric auth-service user id") @PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<Void>> unlockAccount(@Parameter(description = "Auth user UUID") @PathVariable UUID userId) {
         log.info("Unlock account request for userId: {}", userId);
         authService.unlockAccount(userId);
         return ResponseEntity.ok(ApiResponse.success("Account unlocked successfully", null));
@@ -71,9 +73,9 @@ public class UserController {
     })
     @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/login-history")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurityService.isCurrentUser(#userId)")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<LoginHistoryResponse>>> getLoginHistory(
-            @Parameter(description = "Numeric auth-service user id") @PathVariable Long userId,
+            @Parameter(description = "Auth user UUID") @PathVariable UUID userId,
             @Parameter(description = "Zero-based page index") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "20") int size) {
         log.info("Getting login history for userId: {}", userId);

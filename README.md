@@ -23,7 +23,7 @@ Authentication & authorization microservice. Issues JWT access + refresh tokens 
 - **Registers** users (`POST /api/auth/register`) — bcrypts password, assigns default role
 - **Issues JWT on login** (`POST /api/auth/login`) — HS384 signed, default 1 h expiry
 - **Refreshes tokens** (`POST /api/auth/refresh`) — rotating refresh tokens stored in `refresh_tokens` table
-- **Validates tokens for the gateway** (`POST /api/auth/validate`) — the only endpoint the gateway calls unauthenticated
+- **Validates tokens for the gateway** (`GET /api/auth/validate`) — the only endpoint the gateway calls unauthenticated
 - **Password reset** (`POST /api/auth/reset-password`) — emits `user.password-reset` event
 - **Manages roles** (`/api/roles/**`) — seed USER / ENGINEER / MANAGER / ADMIN
 - **Admin user operations** (`/api/admin/users/**`) — list / lock / unlock / delete
@@ -40,9 +40,9 @@ Authentication & authorization microservice. Issues JWT access + refresh tokens 
 | POST | `/api/auth/login` | public | Exchange credentials for JWT |
 | POST | `/api/auth/refresh` | public | Swap refresh token for new access token |
 | POST | `/api/auth/reset-password` | public | Trigger password reset flow |
-| POST | `/api/auth/validate` | public | Decode + validate an access token (called by gateway) |
+| GET | `/api/auth/validate` | public | Decode + validate an access token (called by gateway) |
 | POST | `/api/auth/logout` | JWT | Revoke current refresh token |
-| GET | `/api/auth/me` | JWT | Current user profile |
+| PUT | `/api/auth/change-password` | JWT | Change own account password |
 
 ### Internal (service-to-service, `/internal/**`)
 | Method | Path | Auth | Purpose |

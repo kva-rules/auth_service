@@ -243,11 +243,11 @@ public class AuthService {
     }
 
     @Transactional
-    public void lockAccount(Long userId) {
-        log.info("Locking account for userId: {}", userId);
-        
-        User user = authUserRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with userId: " + userId));
+    public void lockAccount(UUID authUserId) {
+        log.info("Locking account for authUserId: {}", authUserId);
+
+        User user = authUserRepository.findByAuthUserId(authUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with authUserId: " + authUserId));
 
         user.setAccountStatus(AccountStatus.LOCKED);
         user.setUpdatedAt(LocalDateTime.now());
@@ -261,11 +261,11 @@ public class AuthService {
     }
 
     @Transactional
-    public void unlockAccount(Long userId) {
-        log.info("Unlocking account for userId: {}", userId);
-        
-        User user = authUserRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with userId: " + userId));
+    public void unlockAccount(UUID authUserId) {
+        log.info("Unlocking account for authUserId: {}", authUserId);
+
+        User user = authUserRepository.findByAuthUserId(authUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with authUserId: " + authUserId));
 
         user.setAccountStatus(AccountStatus.ACTIVE);
         user.setFailedLoginAttempts(0);
@@ -276,10 +276,10 @@ public class AuthService {
         log.info("Account unlocked for user: {}", user.getEmail());
     }
 
-    public Page<LoginHistory> getLoginHistory(Long userId, Pageable pageable) {
-        User user = authUserRepository.findByUserId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with userId: " + userId));
-        
+    public Page<LoginHistory> getLoginHistory(UUID authUserId, Pageable pageable) {
+        User user = authUserRepository.findByAuthUserId(authUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with authUserId: " + authUserId));
+
         return loginHistoryRepository.findByAuthUserIdOrderByLoginTimeDesc(user.getAuthUserId(), pageable);
     }
 
